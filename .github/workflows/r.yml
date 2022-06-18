@@ -23,7 +23,10 @@ jobs:
           path: ${{ env.R_LIBS_USER }}
           key:  r-${{ hashFiles('DESCRIPTION') }}
       - name: Install packages
-        run: Rscript -e 'options(Ncpus = 2, repos="https://packagemanager.rstudio.com/cran/__linux__/focal/2022-06-17"); install.packages(c("dplyr", "readr", "rvest", "janitor", "jsonlite"), dependencies = TRUE)'
+        run: |
+          Rscript -e 'options(Ncpus = 2, repos="https://packagemanager.rstudio.com/cran/__linux__/focal/2022-06-17"); 
+                      pkgs <- install.packages(c("dplyr", "readr", "rvest", "janitor", "jsonlite"), dependencies = TRUE); 
+                      if(length(new.pkgs <- setdiff(pkgs, rownames(installed.packages())))) install.packages(new.pkgs)'
       - name: Run Rscript
         run: Rscript scrape_nepse_data.R
       - name: commit

@@ -17,14 +17,20 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: r-lib/actions/setup-r@master
-      
       - name: Cache R Packages
         uses: actions/cache@v2
         with:
           path: ${{ env.R_LIBS_USER }}
           key:  r-${{ hashFiles('DESCRIPTION') }}
-
       - name: Install packages
         run: Rscript -e 'options(Ncpus = 2, repos="https://packagemanager.rstudio.com/cran/__linux__/focal/2022-06-17"); install.packages(c("dplyr", "readr", "rvest", "janitor", "jsonlite"), dependencies = TRUE)'
       - name: Run Rscript
         run: Rscript scrape_nepse_data.R
+      - name: commit
+        env:
+         GITHUB_TOKEN: ${{secrets.GH_TOKEN}} 
+        run: |
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git config user.name "{{ github.actor }}"
+          git commit -am 'Re-run scrape_nepse_data.R' || echo "No changes to commit"
+          git push -u origin HEAD:${{ github.ref }} || echo "Error in Push"

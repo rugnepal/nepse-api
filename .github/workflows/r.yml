@@ -25,9 +25,8 @@ jobs:
       - name: Install packages
         run: |
           Rscript -e 'options(Ncpus = 2, repos="https://packagemanager.rstudio.com/cran/__linux__/focal/2022-06-17"); 
-                      pkgs <- c("dplyr", "readr", "rvest", "janitor", "jsonlite"); 
-                      if(length(new.pkgs <- setdiff(pkgs, rownames(installed.packages())))); 
-                      install.packages(new.pkgs, dependencies = T)'
+          pkgs <- c("dplyr", "readr", "rvest", "janitor", "jsonlite"); 
+          if(length(new.pkgs <- setdiff(pkgs, rownames(installed.packages())))) install.packages(new.pkgs, dependencies = T)'
       - name: Run Rscript
         run: Rscript scrape_nepse_data.R
       - name: commit

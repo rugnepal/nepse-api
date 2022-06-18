@@ -1,4 +1,4 @@
-name: twitter_bot
+name: scrape_nepse_data
 
 on:
   push:
